@@ -27,7 +27,7 @@ NAME_MAP = (
     {},
     {},
     dict(zip(MONTHS, range(1, 13))),
-    dict(zip(WEEKDAYS, range(0, 8))),
+    dict(zip(WEEKDAYS, range(0, 8))), 
 )
 NAME_REPLACE_RE = [re.compile('({})'.format('|'.join(x))) for x in NAME_MAP]
 
@@ -76,5 +76,20 @@ def parse_spec(spec):
                 b, = _numbers(number)
                 out_set.add(b)
 
+    # Weekdays need special treatment: 0 is an alias for 7,
+    # so when 0 is present we add 7 as well:
+    if 0 in sets[4]: sets[4].add(7)
     return ParsedSpec(*sets)
 
+def match(parsed_spec, dt):
+    """
+    Returns true if parsed_spec would trigger on the datetime dt
+    """
+    # dt.weekday() of monday is 0
+    return (
+        dt.minute in parsed_spec.minute and
+        dt.hour in parsed_spec.hour and
+        dt.day in parsed_spec.dom and
+        dt.month in parsed_spec.month and
+        dt.weekday()+1 in parsed_spec.dow
+    )

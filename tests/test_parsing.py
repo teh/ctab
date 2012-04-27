@@ -1,3 +1,4 @@
+import datetime
 from nose.tools import eq_
 from ctab import ctab
 
@@ -15,3 +16,21 @@ def test_parse_spec():
 def test_resolve_names():
     eq_(ctab.resolve_names('* * * * *'), '0-59 0-23 1-31 1-12 0-7')
     eq_(ctab.resolve_names('* * * Oct suN'), '0-59 0-23 1-31 10 7')
+
+def test_match():
+    now = datetime.datetime.utcnow()
+    sunday = datetime.datetime(2012, 4, 29)
+    monday = datetime.datetime(2012, 4, 30)
+
+    # Now
+    spec = ctab.parse_spec(ctab.resolve_names('* * * * *'))
+    eq_(ctab.match(spec, now), True)
+
+    # Day of week
+    spec = ctab.parse_spec(ctab.resolve_names('* * * * 0'))
+    eq_(ctab.match(spec, sunday), True)
+    eq_(ctab.match(spec, monday), False)
+
+    spec = ctab.parse_spec(ctab.resolve_names('* * * * 7'))
+    eq_(ctab.match(spec, sunday), True)
+    eq_(ctab.match(spec, monday), False)
