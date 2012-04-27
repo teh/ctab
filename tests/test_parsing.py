@@ -34,3 +34,8 @@ def test_match():
     spec = ctab.parse_spec(ctab.resolve_names('* * * * 7'))
     eq_(ctab.match(spec, sunday), True)
     eq_(ctab.match(spec, monday), False)
+
+    # Ranges
+    spec = ctab.parse_spec(ctab.resolve_names('*/7 * * * *'))
+    eq_(ctab.match(spec, datetime.datetime(2012, 10, 10, 0, 6)), True)
+    eq_(ctab.match(spec, datetime.datetime(2012, 10, 10, 0, 7)), False)
