@@ -55,7 +55,7 @@ def _numbers(s):
 def parse_spec(spec):
     """
     Parses a specs like
-    '* * * * *' or '1 0 0 0 0' 
+    '* * * * *' or '1 0 0 0 0'
     into a set that can be evaluated
     """
     parts = spec.split()
@@ -72,6 +72,5 @@ def parse_spec(spec):
             if number:
                 b, = _numbers(number)
                 out_set.add(b)
-                
+
     return sets
-    
