@@ -11,6 +11,9 @@ Cron format from man 5 crontab:
 """
 
 import re
+import collections
+
+ParsedSpec = collections.namedtuple('ParsedSpec', 'minute hour dom month dow')
 
 NUMBER_RE = re.compile('\d+')
 ITEM_RE = re.compile(r'(\d+-\d+/\d+)|(\d+-\d+)|(\d+)')
@@ -73,4 +76,5 @@ def parse_spec(spec):
                 b, = _numbers(number)
                 out_set.add(b)
 
-    return sets
+    return ParsedSpec(*sets)
+
