@@ -1,3 +1,4 @@
+import itertools
 import datetime
 from nose.tools import eq_
 from ctab import ctab
@@ -39,3 +40,21 @@ def test_match():
     spec = ctab.parse_spec(ctab.resolve_names('*/7 * * * *'))
     eq_(ctab.match(spec, datetime.datetime(2012, 10, 10, 0, 7)), True)
     eq_(ctab.match(spec, datetime.datetime(2012, 10, 10, 0, 8)), False)
+
+def test_cron_iter():
+    spec = ctab.parse_spec(ctab.resolve_names('*/7 * * * *'))
+    sunday = datetime.datetime(2012, 4, 29)
+    eq_(zip(ctab.cron_iter(spec, sunday), range(10)),
+        [(datetime.datetime(2012, 4, 29, 0, 0), 0),
+         (datetime.datetime(2012, 4, 29, 0, 7), 1),
+         (datetime.datetime(2012, 4, 29, 0, 14), 2),
+         (datetime.datetime(2012, 4, 29, 0, 21), 3),
+         (datetime.datetime(2012, 4, 29, 0, 28), 4),
+         (datetime.datetime(2012, 4, 29, 0, 35), 5),
+         (datetime.datetime(2012, 4, 29, 0, 42), 6),
+         (datetime.datetime(2012, 4, 29, 0, 49), 7),
+         (datetime.datetime(2012, 4, 29, 0, 56), 8),
+         (datetime.datetime(2012, 4, 29, 1, 0), 9)]
+        )
+        
+        

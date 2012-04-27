@@ -1,3 +1,5 @@
+import datetime
+
 """
 Cron format from man 5 crontab:
 
@@ -93,3 +95,15 @@ def match(parsed_spec, dt):
         dt.month in parsed_spec.month and
         dt.weekday()+1 in parsed_spec.dow
     )
+
+def cron_iter(parsed_spec, start_dt=None):
+    """
+    Inefficient cron iter: iterates over every minute and
+    checks whether it matches.
+    """
+    dt = datetime.datetime.utcnow() if start_dt is None else start_dt
+    
+    while True:
+        if match(parsed_spec, dt):
+            yield dt
+        dt += datetime.timedelta(minutes=1)
