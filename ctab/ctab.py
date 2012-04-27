@@ -83,6 +83,9 @@ def parse_spec(spec):
     if 0 in sets[4]: sets[4].add(7)
     return ParsedSpec(*sets)
 
+def parse(spec):
+    return parse_spec(resolve_names(spec))
+
 def match(parsed_spec, dt):
     """
     Returns true if parsed_spec would trigger on the datetime dt
